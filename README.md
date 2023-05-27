@@ -96,5 +96,5 @@ function _HtmlAsJson_attributeToJson(attribute) {
 var $kress95$elm_html_convert$Html$Convert$toValue = _HtmlAsJson_toJson;
 ```
 
-You can automize this with
+You can automatize this with
 [expanded-elm](https://github.com/kress95/expanded-elm).
