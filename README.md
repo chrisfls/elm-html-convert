@@ -13,7 +13,7 @@ you.
 #### where:
 
 ```js
-var $kress95$elm_html_convert$Html$Convert$encode = function (_v0) {
+var $kress95$elm_html_convert$Html$Convert$toValue = function (_v0) {
 	return $elm$json$Json$Encode$string('You thought it was a JSON value, but it was me, Dio!');
 };
 ```
@@ -95,5 +95,5 @@ function _HtmlAsJson_attributeToJson(attribute) {
   return _Json_wrap(attribute);
 }
 
-var $kress95$elm_html_convert$Html$Convert$encode = _HtmlAsJson_toJson;
+var $kress95$elm_html_convert$Html$Convert$toValue = _HtmlAsJson_toJson;
 ```
