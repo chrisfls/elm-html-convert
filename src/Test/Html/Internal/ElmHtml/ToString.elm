@@ -33,11 +33,11 @@ defaultFormatOptions =
     }
 
 
-nodeToLines : FormatOptions -> ElmHtml msg -> List String
-nodeToLines options nodeType =
+nodeToLines : ElementKind -> FormatOptions -> ElmHtml msg -> List String
+nodeToLines kind options nodeType =
     case nodeType of
         TextTag { text } ->
-            [ text ]
+            [ escapeRawText kind text ]
 
         NodeEntry record ->
             nodeRecordToString options record
@@ -60,7 +60,7 @@ nodeToString =
 -}
 nodeToStringWithOptions : FormatOptions -> ElmHtml msg -> String
 nodeToStringWithOptions options =
-    nodeToLines options
+    nodeToLines RawTextElements options
         >> String.join
             (if options.newLines then
                 "\n"
@@ -99,7 +99,7 @@ nodeRecordToString options { tag, children, facts } =
             "</" ++ tag ++ ">"
 
         childrenStrings =
-            List.map (nodeToLines options) children
+            List.map (nodeToLines (toElementKind tag) options) children
                 |> List.concat
                 |> List.map ((++) (String.repeat options.indent " "))
 
@@ -122,6 +122,7 @@ nodeRecordToString options { tag, children, facts } =
         stringAttributes =
             Dict.filter (\k _ -> k /= "className") facts.stringAttributes
                 |> Dict.toList
+                |> List.map (Tuple.mapFirst propertyToAttributeName)
                 |> List.map (\( k, v ) -> k ++ "=\"" ++ v ++ "\"")
                 |> String.join " "
                 |> Just
@@ -152,6 +153,45 @@ nodeRecordToString options { tag, children, facts } =
            element kinds.
         -}
         _ ->
-            [ openTag [ classes, styles, stringAttributes, boolAttributes ] ]
-                ++ childrenStrings
-                ++ [ closeTag ]
+            openTag [ classes, styles, stringAttributes, boolAttributes ]
+                :: (childrenStrings ++ [ closeTag ])
+
+
+{-| <https://github.com/elm/virtual-dom/blob/5a5bcf48720bc7d53461b3cd42a9f19f119c5503/src/Elm/Kernel/VirtualDom.server.js#L196-L201>
+-}
+propertyToAttributeName : String.String -> String.String
+propertyToAttributeName propertyName =
+    case propertyName of
+        "className" ->
+            "class"
+
+        "htmlFor" ->
+            "for"
+
+        "httpEquiv" ->
+            "http-equiv"
+
+        "acceptCharset" ->
+            "accept-charset"
+
+        _ ->
+            propertyName
+
+
+escapeRawText : ElementKind -> String.String -> String.String
+escapeRawText kind rawText =
+    case kind of
+        VoidElements ->
+            rawText
+
+        RawTextElements ->
+            rawText
+
+        _ ->
+            {- https://github.com/elm/virtual-dom/blob/5a5bcf48720bc7d53461b3cd42a9f19f119c5503/src/Elm/Kernel/VirtualDom.server.js#L8-L26 -}
+            rawText
+                |> String.replace "&" "&amp;"
+                |> String.replace "<" "&lt;"
+                |> String.replace ">" "&gt;"
+                |> String.replace "\"" "&quot;"
+                |> String.replace "'" "&#039;"
