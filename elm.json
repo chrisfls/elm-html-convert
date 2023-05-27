@@ -3,7 +3,7 @@
     "name": "kress95/elm-html-convert",
     "summary": "Convert HTML to JSON value and string",
     "license": "BSD-3-Clause",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "exposed-modules": [
         "Html.Convert"
     ],
