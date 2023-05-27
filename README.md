@@ -2,15 +2,11 @@
 
 This is a hack ported from
 [elm-test](https://github.com/elm-explorations/test/blob/cda4e92057929a86a11d74ab67c4f4944bf762f0/src/Test/Html/Internal/Inert.elm#L20C1-L27)
-that allows converting `Html msg` to `Value` and `String`.
-
-> WARNING: I didn't test this package yet.
+that allows converting `Html` to `Value` and `String`.
 
 ## Post-processing
 
-This library requires [post-processing](#98f5c378-5809-4e35-904e-d1c5c3a8154e),
-[expanded-elm](https://github.com/kress95/expanded-elm) can automize that for
-you.
+This library requires [post-processing](#98f5c378-5809-4e35-904e-d1c5c3a8154e).
 
 #### where:
 
@@ -99,3 +95,6 @@ function _HtmlAsJson_attributeToJson(attribute) {
 
 var $kress95$elm_html_convert$Html$Convert$toValue = _HtmlAsJson_toJson;
 ```
+
+You can automize this with
+[expanded-elm](https://github.com/kress95/expanded-elm).
