@@ -1,0 +1,8 @@
+{
+  "tasks": {
+    "test": "elm-test-rs --deno --compiler ./xelm.ts"
+  },
+  "imports": {
+    "xelm": "https://raw.githubusercontent.com/kress95/expanded-elm/16553c4e6474ab0dd3bb47e540c29ec466192661/xelm.ts"
+  }
+}
